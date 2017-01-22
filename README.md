@@ -4,7 +4,7 @@ heavily opinionated setup for working in large / multiple teams.
 
 ## Contributing
 
-Opinionated as it gets, use PhpStorm or configure your IDE in a likewise manner.
+(TBD)
 
 ### PhpStorm Config
 
@@ -36,7 +36,18 @@ Note this is is supposed to be in sync with the module-resolver config provided 
 Those can be extracted using jq:
 
 ```bash
- jq -r < .babelrc '.plugins[] | select(type=="array") | select(.[0]=="module-resolver") | .[1].root | map_values(sub("\\.\\/(?<S>\\S)"; "file://$PROJECT_DIR$/\(.S)"))  | map_values(sub("\\.\\/"; "file://$PROJECT_DIR$")) | map_values(sub("(?<S>\\S+)"; "<path value=\"\(.S)\" />"))' 
+ jq -r < .babelrc '.plugins[] |
+    select(type=="array") |
+    select(.[0]=="module-resolver") |
+    .[1].root | map_values(
+      sub("\\.\\/(?<S>\\S)"; "file://$PROJECT_DIR$/\(.S)")
+    ) |
+    map_values(
+      sub("\\.\\/"; "file://$PROJECT_DIR$")
+    ) |
+    map_values(
+      sub("(?<S>\\S+)"; "<path value=\"\(.S)\" />")
+    )' 
 ```
 
 ```
