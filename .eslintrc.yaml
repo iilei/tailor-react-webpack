@@ -1,0 +1,51 @@
+# Styleguide based on airbnb's guide: https://github.com/airbnb/javascript
+---
+  extends: "airbnb"
+  root: true
+  ecmaFeatures:
+    jsx: true
+    templateStrings: true
+    classes: true
+    modules: true
+  parser: "babel-eslint"
+  globals:
+    - process
+  plugins:
+    - "react"
+  settings:
+    import/resolver:
+      babel-module:
+      webpack:
+  rules:
+    no-magic-numbers:
+      - 2
+      -
+        ignoreArrayIndexes: true
+        ignore:
+          - 0
+          - 1
+    valid-jsdoc:
+      - 2
+    no-alert:
+      - 2
+    no-console:
+      - 2
+    no-return-assign:
+      - 0
+    react/jsx-no-bind:
+    - 2
+    -
+      ignoreRefs: true
+    no-debugger:
+      - 2
+    no-underscore-dangle:
+      - error
+      - allow:
+        - __injectIntl
+    import/no-extraneous-dependencies:
+      - 2
+      - devDependencies:
+        - "**/*.spec.js"
+        - "./scripts/**/*"
+        - "./config/**/*"
+

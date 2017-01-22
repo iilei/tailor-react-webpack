@@ -1,0 +1,41 @@
+---
+# Locales: order matters! See Readme.md
+default_locale: de-DE
+locales:
+  - de-DE
+  - en-GB
+locale_translation_key_prefix: "i18n.language.menu.key" # used in phraseapp
+date_time:
+  first_day_of_week: 1
+  time_zone: "Europe/Berlin"
+  default:
+    date: L
+    time: LT
+    datetime: LDTS
+    long_date_format:
+      # see 'longDateFormat' entry in node_modules/moment/src/locale/de.js
+      # and https://github.com/yahoo/react-intl/wiki/Components#date-formatting-components
+      L:
+        year: 'numeric'
+        month: '2-digit'
+        day: '2-digit'
+      LT:
+        hour: '2-digit'
+        minute: '2-digit'
+      LTS:
+        hour: '2-digit'
+        minute: '2-digit'
+        second: '2-digit'
+      LDTS:
+        year: 'numeric'
+        month: '2-digit'
+        day: '2-digit'
+        hour: '2-digit'
+        minute: '2-digit'
+        second: '2-digit'
+api:
+  default:
+    limit: 50
+  version: v1
+  resources:
+    login: "/login/{loginType}"

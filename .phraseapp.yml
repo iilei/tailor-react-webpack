@@ -1,0 +1,13 @@
+phraseapp:
+  project_id: <id>
+  file_format: json
+  push:
+    sources:
+    - file: ./build/lang/local/<locale_name>.json
+      params:
+        file_format: json
+  pull:
+    targets:
+    - file: ./build/lang/remote/<locale_code>.json
+      params:
+        file_format: simple_json

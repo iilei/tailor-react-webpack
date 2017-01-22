@@ -1,0 +1,17 @@
+## Mandatory rules
+
+### Generated content
+node_modules/
+
+
+#### Environment
+.env
+
+
+## Opinionated rules
+.idea/
+!.idea/webResources.xml
+!.idea/codeStyleSettings.xml
+!.idea/jsLibraryMappings.xml
+!.idea/inspectionProfiles/Project_Default.xml
+!.idea/codeStyleSettings.xml
