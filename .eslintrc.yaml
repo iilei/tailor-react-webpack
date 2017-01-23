@@ -59,7 +59,6 @@
         identifiers: true
         lang: en_US
         skipWords:
-        - a11y
         - api
         - camelize
         - cldr
