@@ -60,6 +60,7 @@
         lang: en_US
         skipWords:
         - api
+        - attow
         - camelize
         - cldr
         - com
@@ -67,13 +68,13 @@
         - concat
         - const
         - diff
-        - domchristie
         - filename
         - formatjs
         - github
         - http
         - https
         - iilei
+        - intl
         - javascript
         - js
         - lang
@@ -89,8 +90,6 @@
         - yaml
         - yamljs
         skipIfMatch:
-        - http://[^s]*
-        - ^\D[^aeiouAEIOU]{2,3}$    # Intl
-        - ^\D[^aeiouAEIOU]{1,2}\d+$ # es6
-        - ^\D{1,2}\d+\D{1,2}$       # a11y, i18n
-        - ^\D{1,2}$                 # fs
+        - ^\S[^aeiou]{1,3}$ # Intl, cldr
+          # regarding cldr see https://github.com/aotaduy/eslint-plugin-spellcheck/issues/29
+        - https?://[^s]*

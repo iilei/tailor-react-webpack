@@ -2,7 +2,7 @@
 
 ### Generated content
 node_modules/
-
+*.log
 
 #### Environment
 .env
