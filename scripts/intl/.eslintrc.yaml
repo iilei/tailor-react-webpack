@@ -1,0 +1,6 @@
+# Styleguide based on airbnb's guide: https://github.com/airbnb/javascript
+---
+  root: false
+  rules:
+    inflection/no-plural-filenames:
+      - 0

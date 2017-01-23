@@ -11,7 +11,9 @@
   globals:
     - process
   plugins:
-    - "react"
+    - react
+    - spellcheck
+    - inflection
   settings:
     import/resolver:
       babel-module:
@@ -48,4 +50,48 @@
         - "**/*.spec.js"
         - "./scripts/**/*"
         - "./config/**/*"
-
+    inflection/no-plural-filenames:
+      - error
+    spellcheck/spell-checker:
+      - 2
+      - comments: true
+        strings: true
+        identifiers: true
+        lang: en_US
+        skipWords:
+        - a11y
+        - api
+        - camelize
+        - cldr
+        - com
+        - commonjs
+        - concat
+        - const
+        - diff
+        - domchristie
+        - filename
+        - formatjs
+        - github
+        - http
+        - https
+        - iilei
+        - javascript
+        - js
+        - lang
+        - mkdirp
+        - msg
+        - namespace
+        - ret
+        - src
+        - stringify
+        - therefor
+        - util
+        - utils
+        - yaml
+        - yamljs
+        skipIfMatch:
+        - http://[^s]*
+        - ^\D[^aeiouAEIOU]{2,3}$    # Intl
+        - ^\D[^aeiouAEIOU]{1,2}\d+$ # es6
+        - ^\D{1,2}\d+\D{1,2}$       # a11y, i18n
+        - ^\D{1,2}$                 # fs

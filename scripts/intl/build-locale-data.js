@@ -11,7 +11,7 @@ const cldrData = extractCLDRData({
 });
 
 const cldrDataByLocale = new Map(
-  Object.keys(cldrData).map(locale => [locale, cldrData[locale]])
+  Object.keys(cldrData).map(locale => [locale, cldrData[locale]]),
 );
 
 const cldrDataByLang = [...cldrDataByLocale].reduce((map, [locale, data]) => {

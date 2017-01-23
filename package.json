@@ -21,6 +21,9 @@
     "intl:prep": "npm run intl:fetch-langs && phraseapp pull && npm run intl:add-cache-bust && npm run intl:build-locale-data && npm run intl:build-language-menu && npm run intl:aggregate",
     "intl": "npm run intl:prep && echo \"\nIntl-Keys to be synced: $(cat build/lang/local/English.json | jq length)\n\" && [[ $(cat build/lang/local/English.json | jq length) -gt 1 ]] && phraseapp push || exit 0"
   },
+  "pre-push": [
+    "lint"
+  ],
   "keywords": [
     "Webpack",
     "Yarn",
@@ -46,12 +49,15 @@
     "eslint-import-resolver-babel-module": "^2.2.1",
     "eslint-import-resolver-babel-module-alias": "^1.5.1",
     "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-inflection": "1.1.1",
     "eslint-plugin-jsx-a11y": "3.0.2",
     "eslint-plugin-react": "6.9.0",
+    "eslint-plugin-spellcheck": "0.0.8",
     "formatjs-extract-cldr-data": "3.0.0",
     "fs": "0.0.1-security",
     "glob": "7.1.1",
     "mkdirp": "0.5.1",
+    "pre-push": "0.1.1",
     "react-intl": "2.2.3",
     "serialize-javascript": "1.3.0",
     "webpack": "2.2.0",
