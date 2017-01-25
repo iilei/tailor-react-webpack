@@ -1,13 +1,13 @@
 import serialize from 'serialize-javascript';
-import config from 'config';
+import localeList from 'config/localeList';
 import writeFile from 'scripts/writeFile';
 import i18n from './i18n';
 
-const localeCodes = config.get('localeList').map(locale => locale.code);
+const localeCodes = localeList.map(locale => locale.code);
 
 const msgDefinitions = ((locales) => {
   const retVal = locales.map((locale) => {
-    const { name } = config.get('localeList').find(item => (item.code === locale));
+    const { name } = localeList.find(item => (item.code === locale));
     return ({
       [i18n.generateMsgKey(locale)]: {
         id: i18n.generateMsgKey(locale),

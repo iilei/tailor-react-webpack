@@ -62,6 +62,16 @@ Those can be extracted using jq:
 suggestion: try [parrot](https://anthonynsimon.gitbooks.io/parrot)
 as an alternative to phraseapp
 
+Phraseapp: copy `.phraseapp.yml.example` to `.phraseapp.yml`, change the `<PROJECT_ID>`.
+
+To run the `intl[:*]` tasks, a Phraseapp project needs to be in place with the languages named `de-DE` and `en-US` as listed in appConfig.yaml:
+
+```yaml
+default_locale: de-DE
+locales:
+  - de-DE
+  - en-US
+```
 
 ### Structure
 

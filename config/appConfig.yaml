@@ -3,7 +3,7 @@
 default_locale: de-DE
 locales:
   - de-DE
-  - en-GB
+  - en-US
 locale_translation_key_prefix: "i18n.language.menu.key" # used in phraseapp
 date_time:
   first_day_of_week: 1

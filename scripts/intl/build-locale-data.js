@@ -4,13 +4,14 @@ import serialize from 'serialize-javascript';
 import writeFile from 'scripts/writeFile';
 import config from 'config';
 
-const DEFAULT_LOCALE = (config.defaultLocale && `${config.defaultLocale}`) || 'de-DE';
+// const DEFAULT_LOCALE = (config.defaultLocale && `${config.defaultLocale}`) || 'de-DE';
 
 const cldrData = extractCLDRData({
-  locales: config.get('locales'),
+  locales: config.locales,
   pluralRules: true,
   relativeFields: true,
 });
+
 
 const cldrDataByLocale = new Map(
   Object.keys(cldrData).map(locale => [locale, cldrData[locale]]),
@@ -28,13 +29,25 @@ function createDataModule(localeData) {
 
   return {
     es6: (
-      `// GENERATED FILE
+      `/*
++---------------------+
+|                     |
+|  GENERATED FILE !   |
+|                     |
++---------------------+
+*/
 export default ${serializedLocaleData};
 `
     ),
 
     commonjs: (
-      `// GENERATED FILE
+      `/*
++---------------------+
+|                     |
+|  GENERATED FILE !   |
+|                     |
++---------------------+
+*/
 module.exports = ${serializedLocaleData};
 `
     ),
@@ -49,14 +62,14 @@ function throwIfError(error) {
 
 // -----------------------------------------------------------------------------
 
-mkdirpSync('src/locale-data/');
-const defaultData = createDataModule(cldrDataByLocale.get(DEFAULT_LOCALE));
-writeFile(`src/${DEFAULT_LOCALE}.js`, defaultData);
+mkdirpSync('locale-data/');
+// const defaultData = createDataModule(cldrDataByLocale.get(DEFAULT_LOCALE));
+// writeFile(`src/${DEFAULT_LOCALE}.js`, defaultData);
 
 const allData = createDataModule([...cldrDataByLocale.values()]);
-writeFile('src/locale-data/index.js', allData.es6, throwIfError);
+writeFile('locale-data/index.js', allData.es6, throwIfError);
 
 cldrDataByLang.forEach((cldrDataValue, lang) => {
   const data = createDataModule(cldrDataValue);
-  writeFile(`src/locale-data/${lang}.js`, data.es6, throwIfError);
+  writeFile(`locale-data/${lang}.js`, data.es6, throwIfError);
 });

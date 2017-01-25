@@ -1,5 +1,5 @@
 phraseapp:
-  project_id: <id>
+  project_id: <PROJECT_ID>
   file_format: json
   push:
     sources:

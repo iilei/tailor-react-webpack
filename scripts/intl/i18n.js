@@ -1,9 +1,8 @@
 import unifyLocaleCode from 'util/unifyLocaleCode';
-import config from 'config';
+import config from 'config/index';
 
 const i18n = {
   generateMsgKey: string => (`${config.localeTranslationKeyPrefix}.${unifyLocaleCode(string)}`),
-  localeCodes: config.locales,
 };
 
 export default i18n;

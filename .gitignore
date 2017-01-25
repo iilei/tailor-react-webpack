@@ -1,11 +1,14 @@
 ## Mandatory rules
 
 ### Generated content
+build/
 node_modules/
+locale-data/
 *.log
 
 #### Environment
 .env
+.phraseapp.yml
 
 
 ## Opinionated rules
