@@ -1,8 +1,10 @@
-import * as fs from 'fs';
 import { sync as mkdirpSync } from 'mkdirp';
 import extractCLDRData from 'formatjs-extract-cldr-data';
 import serialize from 'serialize-javascript';
-import config from '../../config';
+import writeFile from 'scripts/writeFile';
+import config from 'config';
+
+const DEFAULT_LOCALE = (config.defaultLocale && `${config.defaultLocale}`) || 'de-DE';
 
 const cldrData = extractCLDRData({
   locales: config.get('locales'),
@@ -48,11 +50,13 @@ function throwIfError(error) {
 // -----------------------------------------------------------------------------
 
 mkdirpSync('src/locale-data/');
+const defaultData = createDataModule(cldrDataByLocale.get(DEFAULT_LOCALE));
+writeFile(`src/${DEFAULT_LOCALE}.js`, defaultData);
 
 const allData = createDataModule([...cldrDataByLocale.values()]);
-fs.writeFile('src/locale-data/index.js', allData.es6, throwIfError);
+writeFile('src/locale-data/index.js', allData.es6, throwIfError);
 
 cldrDataByLang.forEach((cldrDataValue, lang) => {
   const data = createDataModule(cldrDataValue);
-  fs.writeFile(`src/locale-data/${lang}.js`, data.es6, throwIfError);
+  writeFile(`src/locale-data/${lang}.js`, data.es6, throwIfError);
 });

@@ -1,6 +1,6 @@
-import * as fs from 'fs';
 import serialize from 'serialize-javascript';
-import config from '../../config';
+import config from 'config';
+import writeFile from 'scripts/writeFile';
 import i18n from './i18n';
 
 const localeCodes = config.get('localeList').map(locale => locale.code);
@@ -46,4 +46,4 @@ function throwIfError(error) {
 }
 
 const allData = createDataModule(Object.assign({}, ...msgDefinitions));
-fs.writeFile('src/locale-data/language_menu.js', allData.es6, throwIfError);
+writeFile('src/locale-data/language_menu.js', allData.es6, throwIfError);
