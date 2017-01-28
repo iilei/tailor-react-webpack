@@ -2384,6 +2384,16 @@ kind-of@^3.0.2:
   dependencies:
     is-buffer "^1.0.2"
 
+language-subtag-registry@~0.3.2:
+  version "0.3.17"
+  resolved "https://registry.yarnpkg.com/language-subtag-registry/-/language-subtag-registry-0.3.17.tgz#e26a7fbff40aa37394e7cbe37034a49002961360"
+
+language-tags@1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/language-tags/-/language-tags-1.0.5.tgz#d321dbc4da30ba8bf3024e040fa5c14661f9193a"
+  dependencies:
+    language-subtag-registry "~0.3.2"
+
 lazy-cache@^1.0.3:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/lazy-cache/-/lazy-cache-1.0.4.tgz#a1d78fc3a50474cb80845d3b3b6e1da49a446e8e"

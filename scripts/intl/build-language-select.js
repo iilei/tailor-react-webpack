@@ -7,20 +7,27 @@ const localeCodes = localeList.map(locale => locale.code);
 
 const msgDefinitions = ((locales) => {
   const retVal = locales.map((locale) => {
-    const { name } = localeList.find(item => (item.code === locale));
-    return ({
+    const curentLocale = localeList.find(item => (item.code === locale));
+    const { name, region } = curentLocale;
+    const isDefault = curentLocale.default;
+    const result = {
       [i18n.generateMsgKey(locale)]: {
         id: i18n.generateMsgKey(locale),
         defaultMessage: `${name}`,
-        description: `language name for locale ${locale} - ${name.toLowerCase()}`,
+        description: [
+          `Switch to language ›${name}‹ label, used for language selection`,
+          ` | ${locale} | ${name} | ${region}`,
+          (isDefault ? ' | [ default language ]' : ''),
+        ].join(''),
       },
-    });
+    };
+    return result;
   });
   return retVal;
 })(localeCodes);
 
 function createDataModule(localeData) {
-  const serializedLocaleData = serialize(localeData);
+  const serializedLocaleData = serialize(localeData, { space: 2 });
 
   return {
     es6: (
@@ -31,6 +38,9 @@ function createDataModule(localeData) {
 |                     |
 +---------------------+
 */
+
+/* eslint-disable */
+
 import { defineMessages } from 'react-intl';
 const languageMenu = defineMessages(${serializedLocaleData});
 export default languageMenu;
@@ -46,4 +56,4 @@ function throwIfError(error) {
 }
 
 const allData = createDataModule(Object.assign({}, ...msgDefinitions));
-writeFile('src/locale-data/language_menu.js', allData.es6, throwIfError);
+writeFile('src/intl-message/intl-language-select/generated.js', allData.es6, throwIfError);

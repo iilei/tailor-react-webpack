@@ -2,6 +2,7 @@
 
 ### Generated content
 build/
+src/intl-message/intl-language-select/generated.js
 node_modules/
 locale-data/
 *.log

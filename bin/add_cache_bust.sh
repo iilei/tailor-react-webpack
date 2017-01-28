@@ -13,12 +13,12 @@ __md5_for()
 }
 
 
-mkdir -p build/lang/remote
+mkdir -p build/i18n/remote
 
 # remove hashed files
-rm -rf ./build/lang/remote/*.*.json
+rm -rf ./build/i18n/remote/*.*.json
 
-for fullPath in `find ./build/lang/remote -type f -name '*.json'`; do
+for fullPath in `find ./build/i18n/remote -type f -name '*.json'`; do
     md5=`__md5_for $fullPath | cut -c -8`
     filename=`echo $fullPath | sed "s/^\(.*\)\..*$/\1/"`
     moveTo="$filename.$md5.json"

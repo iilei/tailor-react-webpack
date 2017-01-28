@@ -2,9 +2,8 @@ import { sync as mkdirpSync } from 'mkdirp';
 import extractCLDRData from 'formatjs-extract-cldr-data';
 import serialize from 'serialize-javascript';
 import writeFile from 'scripts/writeFile';
-import config from 'config';
+import config from '../../config/appConfig';
 
-// const DEFAULT_LOCALE = (config.defaultLocale && `${config.defaultLocale}`) || 'de-DE';
 
 const cldrData = extractCLDRData({
   locales: config.locales,

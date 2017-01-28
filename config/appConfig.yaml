@@ -1,10 +1,12 @@
 ---
-# Locales: order matters! See Readme.md
+# Language codes must adhere to RFC-5646 Standard
+
+app_name: my_app # namespace for localstorage - should prefix locale_translation_key_prefix
 default_locale: de-DE
-locales:
+locales: # Locales: order as desired in menu.
   - de-DE
   - en-US
-locale_translation_key_prefix: "i18n.language.menu.key" # used in phraseapp
+locale_translation_key_prefix: "my_app.i18n.language_select.key"
 date_time:
   first_day_of_week: 1
   time_zone: "Europe/Berlin"

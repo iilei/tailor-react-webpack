@@ -4,55 +4,38 @@
 
 import * as fs from 'fs';
 import Yaml from 'yamljs';
-import { sync as globSync } from 'glob';
-import i18n from 'scripts/intl/i18n';
+import tags from 'language-tags'; // RFC-5646 => de-DE <=> 'German'
+import { camelizeKeys } from 'util/camelize';
 
-const config = Yaml.load('config/appConfig.yaml');
+const appConfig = Yaml.load('config/appConfig.yaml');
+const config = camelizeKeys(appConfig);
 
-const remoteLocaleList = JSON.parse(
-  fs.readFileSync('build/lang/phraseapp_locales_list.json', 'utf8'),
+const localeMetadata = JSON.parse(
+  fs.readFileSync('build/i18n/metadata.json', 'utf8'),
 );
 
-
-const LocaleFiles = Array.from(globSync('build/lang/remote/*.json'));
-
-function getLocalizedIdentity(translationKey, filename, fallback) {
-  let identity = JSON.parse(fs.readFileSync(filename, 'utf8'))[translationKey];
-  if (!identity || identity.trim() === '') {
-    identity = fallback;
-  }
-
-  return (identity);
+function languageName(code) {
+  const language = tags.language(code.split('-')[0]).descriptions()[0];
+  return `${language}`;
 }
 
-const localeList =
-  config
-    .locales
-    .map(
-      (languageCode) => {
-        const configLocale = remoteLocaleList.find(locale => (locale.code === languageCode));
-        if (!configLocale) {
-          throw new Error(
-            `Missing File for ${languageCode}! Check your ./config/appConfig.yaml!`,
-          );
-        }
-        const { code, name, rtl } = configLocale;
+function languageRegion(code) {
+  const region = tags.region(code.split('-').pop()).descriptions()[0];
+  return `${region}`;
+}
 
-        const file = (
-          LocaleFiles.filter(
-            item => (new RegExp(`build/lang/remote/${code}..*.json`)).test(item)))[0];
+const localeList = localeMetadata.map(lc => ({
+  code: lc.code,
+  name: languageName(lc.code),
+  region: languageRegion(lc.code),
+  rtl: lc.rtl,
+  source_locale: lc.source_locale,
+  default: [lc.code, lc.name].includes(config.defaultLocale),
+}));
 
-        const translationKey = i18n.generateMsgKey(code);
+// apply sorting as defined in appConfig.yaml
+const sortedLocaleList = config.locales.map(
+  locale => localeList.find(localeCode => localeCode.code === locale),
+);
 
-        return {
-          translationKey,
-          localizedIdentity: getLocalizedIdentity(translationKey, file, name),
-          code,
-          name,
-          rtl,
-          file: file.replace(/^build\/lang\/remote\//, '/lang/'),
-        };
-      },
-    );
-
-export default localeList;
+export default sortedLocaleList;

@@ -13,13 +13,19 @@
     "lint:fix": "eslint --ext js,jsx --fix .",
     "cs": "npm run lint",
     "cs:fix": "npm run lint:fix",
-    "intl:aggregate": "babel-node scripts/intl/aggregate-intl-messages.js",
-    "intl:build-locale-data": "npm run intl:fetch-langs && babel-node scripts/intl/build-locale-data",
-    "intl:build-language-menu": "npm run intl:build-locale-data && babel-node scripts/intl/build-language-menu",
-    "intl:fetch-langs": "mkdir -p build/lang && phraseapp locales list >| build/lang/phraseapp_locales_list.json",
-    "intl:add-cache-bust": ". ./bin/hash_translations.sh",
-    "intl:prep": "npm run intl:fetch-langs && phraseapp pull && npm run intl:add-cache-bust && npm run intl:build-locale-data && npm run intl:build-language-menu && npm run intl:aggregate",
-    "intl": "npm run intl:prep && echo \"\nIntl-Keys to be synced: $(cat build/lang/local/English.json | jq length)\n\" && [[ $(cat build/lang/local/English.json | jq length) -gt 1 ]] && phraseapp push || exit 0"
+    "intl:aggregate": "npm run babel-env scripts/intl/aggregate-intl-messages.js",
+    "intl:build-locale-data": "npm run babel-env scripts/intl/build-locale-data",
+    "intl:build-language-select": "npm run babel-env scripts/intl/build-language-select",
+    "intl:purge": "rm -rf build/i18n",
+    "intl:mkdirs": "mkdir -p build/i18n/{remote,local}",
+    "intl:fetch-meta": "phraseapp locales list > build/i18n/metadata.json",
+    "postintl:fetch-meta": "jq . -M build/i18n/metadata.json | awk 'BEGIN{RS=\"\";getline<\"-\";print>ARGV[1]}' build/i18n/metadata.json",
+    "intl:add-cache-bust": ". ./bin/add_cache_bust.sh",
+    "postinstall": "npm run intl:build-locale-data",
+    "intl": "npm run intl:aggregate",
+    "preintl:pull": "npm run intl:mkdirs",
+    "intl:pull": "npm run intl:fetch-meta && phraseapp pull && npm run intl:add-cache-bust",
+    "intl:push": "npm run intl:aggregate && echo \"\nIntl-Keys to be synced: $(cat build/i18n/__authoring__.json | jq length)\n\" && [[ $(cat build/i18n/__authoring__.json | jq length) -gt 1 ]] && phraseapp push || exit 0"
   },
   "pre-push": [
     "lint"
@@ -56,9 +62,9 @@
     "formatjs-extract-cldr-data": "3.0.0",
     "fs": "0.0.1-security",
     "glob": "7.1.1",
+    "language-tags": "1.0.5",
     "mkdirp": "0.5.1",
     "pre-push": "0.1.1",
-    "react-intl": "2.2.3",
     "serialize-javascript": "1.3.0",
     "webpack": "2.2.0",
     "yamljs": "0.2.8"
@@ -67,6 +73,7 @@
     "dotenv": "4.0.0",
     "humps": "2.0.0",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "react-intl": "2.2.3"
   }
 }

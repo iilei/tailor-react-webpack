@@ -35,4 +35,4 @@ const defaultMessages = globSync(MESSAGES_PATTERN)
   }, {});
 
 mkdirpSync(LANG_DIR);
-fs.writeFileSync(`${LANG_DIR}English.json`, JSON.stringify(defaultMessages, null, INDENT_SPACES));
+fs.writeFileSync(`${LANG_DIR}__authoring__.json`, JSON.stringify(defaultMessages, null, INDENT_SPACES));

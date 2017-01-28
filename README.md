@@ -2,6 +2,26 @@
 
 heavily opinionated setup for working in large / multiple teams.
 
+## Prerequisites
+
+make sure you have [jq](https://stedolan.github.io/jq) and [yarn](https://yarnpkg.com/) installed
+
+Run the following to generate generic locale data user for pluralization etc:
+
+```
+npm run intl:build-locale-data
+```
+
+Fetch remote translation objects by
+
+```
+npm run intl:pull
+```
+
+New translation keys are created entirely within the repository itself. (Single source of truth)
+See [Rect Intl](https://github.com/yahoo/react-intl)
+
+
 ## Contributing
 
 (TBD)

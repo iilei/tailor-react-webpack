@@ -3,11 +3,11 @@ phraseapp:
   file_format: json
   push:
     sources:
-    - file: ./build/lang/local/<locale_name>.json
+    - file: ./build/i18n/local/<locale_name>.json
       params:
         file_format: json
   pull:
     targets:
-    - file: ./build/lang/remote/<locale_code>.json
+    - file: ./build/i18n/remote/<locale_code>.json
       params:
         file_format: simple_json

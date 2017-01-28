@@ -2,11 +2,12 @@
  * Created by iilei on 22.01.17.
  */
 
-import Yaml from 'yamljs';
-import { camelizeKeys } from 'util/camelize';
+import appConfig from './appConfig';
+import localeList from './localeList';
+import localeMap from './localeMap';
 
-const appConfig = Yaml.load('config/appConfig.yaml');
-const config = camelizeKeys(appConfig);
-
-// console.log(JSON.stringify(config, null, 2));
-export default config;
+export {
+  appConfig,
+  localeList,
+  localeMap,
+};
