@@ -6,7 +6,11 @@ build/
 src/intl-message/intl-language-select/generated.js
 node_modules/
 
+# Yarn
+.yarnclean
 
+# Logs
+logs
 *.log
 
 #### Environment
