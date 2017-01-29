@@ -21,7 +21,5 @@ logs
 ## Opinionated rules
 .idea/
 !.idea/webResources.xml
-!.idea/codeStyleSettings.xml
 !.idea/jsLibraryMappings.xml
 !.idea/inspectionProfiles/Project_Default.xml
-!.idea/codeStyleSettings.xml
