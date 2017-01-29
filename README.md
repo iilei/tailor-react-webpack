@@ -81,7 +81,7 @@ Which results in the following
 ### i18n
 
 Phraseapp: copy `.phraseapp.yml.example` to `.phraseapp.yml`, change the `<PROJECT_ID>` according to
-the one of your own project.
+the one of your own project. Don't touch `<locale_name>` and `<locale_code>` tho.
 
 To run the `intl[:*]` tasks, a Phraseapp project needs to be in place with the languages named
 `de-DE` and `en-US` as listed in appConfig.yaml:
