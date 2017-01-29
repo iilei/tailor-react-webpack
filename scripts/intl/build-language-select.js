@@ -1,7 +1,7 @@
 import serialize from 'serialize-javascript';
 import localeList from 'config/localeList';
 import writeFile from 'scripts/writeFile';
-import i18n from './i18n';
+import intlUtil from './intlUtil';
 
 const localeCodes = localeList.map(locale => locale.code);
 
@@ -11,11 +11,11 @@ const msgDefinitions = ((locales) => {
     const { name, region } = curentLocale;
     const isDefault = curentLocale.default;
     const result = {
-      [i18n.generateMsgKey(locale)]: {
-        id: i18n.generateMsgKey(locale),
+      [intlUtil.generateMsgKey(locale)]: {
+        id: intlUtil.generateMsgKey(locale),
         defaultMessage: `${name}`,
         description: [
-          `Switch to language ›${name}‹ label, used for language selection`,
+          `›Switch to ${name} language‹ label, used for language selection`,
           ` | ${locale} | ${name} | ${region}`,
           (isDefault ? ' | [ default language ]' : ''),
         ].join(''),

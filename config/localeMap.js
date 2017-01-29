@@ -5,7 +5,7 @@
 import * as fs from 'fs';
 import { sync as globSync } from 'glob';
 import localeList from 'config/localeList';
-import i18n from '../scripts/intl/i18n';
+import intlUtil from '../scripts/intl/intlUtil';
 
 const remoteLocaleList = JSON.parse(
   fs.readFileSync('build/i18n/metadata.json', 'utf8'),
@@ -34,23 +34,23 @@ const localeMap =
           );
         }
 
-        const file = (
+        const path = (
           LocaleFiles.filter(
             item => (new RegExp(`build/i18n/remote/${code}..*.json`)).test(item)))[0];
 
-        if (!file) {
+        if (!path) {
           throw new Error(
             `No file found matching build/i18n/remote/${code}..*.json! Try \`npm run intl:pull\``,
           );
         }
 
-        const translationKey = i18n.generateMsgKey(code);
+        const translationKey = intlUtil.generateMsgKey(code);
 
         return {
           ...language,
           translationKey,
-          localizedIdentity: getLocalizedIdentity(translationKey, file, name),
-          file: file.replace(/^build\/i18n\/remote\//, '/i18n/'),
+          localizedName: getLocalizedIdentity(translationKey, path, name),
+          file: path.match(/[^/]+$/, '')[0],
         };
       },
     );

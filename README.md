@@ -93,6 +93,27 @@ locales:
   - en-US
 ```
 
+
+There is a command to inspect the generated config:
+```
+npm run conf:dump 
+```
+
+Or, just the localeMap:
+
+
+```
+npm run conf:dump localeMap
+
+# Beautified:
+npm run -s conf:dump localeMap | jq .
+
+```
+
+
+
+
+
 \# TODO:
 
 Try [parrot](https://anthonynsimon.gitbooks.io/parrot)

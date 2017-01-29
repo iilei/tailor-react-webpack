@@ -61,14 +61,14 @@ function throwIfError(error) {
 
 // -----------------------------------------------------------------------------
 
-mkdirpSync('locale-data/');
+mkdirpSync('build/i18n/locale-data/');
 // const defaultData = createDataModule(cldrDataByLocale.get(DEFAULT_LOCALE));
 // writeFile(`src/${DEFAULT_LOCALE}.js`, defaultData);
 
 const allData = createDataModule([...cldrDataByLocale.values()]);
-writeFile('locale-data/index.js', allData.es6, throwIfError);
+writeFile('build/i18n/locale-data/index.js', allData.es6, throwIfError);
 
 cldrDataByLang.forEach((cldrDataValue, lang) => {
   const data = createDataModule(cldrDataValue);
-  writeFile(`locale-data/${lang}.js`, data.es6, throwIfError);
+  writeFile(`build/i18n/locale-data/${lang}.js`, data.es6, throwIfError);
 });
