@@ -19,36 +19,38 @@
       webpack:
   rules:
     no-magic-numbers:
-      - 2
+      - error
       -
         ignoreArrayIndexes: true
         ignore:
           - 0
           - 1
     valid-jsdoc:
-      - 2
+      - error
     no-alert:
-      - 2
+      - error
     no-console:
-      - 2
+      - error
     no-return-assign:
       - 0
     react/jsx-no-bind:
-    - 2
-    -
-      ignoreRefs: true
+      - error
+      -
+        ignoreRefs: true
     no-debugger:
-      - 2
+      - error
     no-underscore-dangle:
       - error
       - allow:
         - __injectIntl
     import/no-extraneous-dependencies:
-      - 2
+      - error
       - devDependencies:
-        - "**/*.spec.js"
+        - "**/*.config.js"
+        - "**/*.spec.{js,jsx}"
         - "./scripts/**/*"
         - "./config/**/*"
+        - "./jestsetup.js"
     inflection/no-plural-filenames:
       - error
 

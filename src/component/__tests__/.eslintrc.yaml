@@ -1,0 +1,12 @@
+# can't wait for https://github.com/eslint/eslint/issues/3611 to be resolved
+---
+  root: false
+  rules:
+    inflection/no-plural-filenames:
+      - 0
+    no-console:
+      - 0
+    no-magic-numbers:
+      - 0
+    arrow-parens:
+      - 0

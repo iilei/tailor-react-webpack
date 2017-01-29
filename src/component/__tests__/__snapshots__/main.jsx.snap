@@ -1,0 +1,10 @@
+exports[`test should render 1`] = `
+<label
+  htmlFor="foo">
+  <input
+    checked={true}
+    onChange={[Function]}
+    type="checkbox" />
+  On
+</label>
+`;
