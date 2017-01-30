@@ -15,7 +15,9 @@ const msgDefinitions = ((locales) => {
         id: intlUtil.generateMsgKey(locale),
         defaultMessage: `${name}`,
         description: [
-          `›Switch to ${name} language‹ label, used for language selection`,
+          `
+›Switch to ${name} language‹
+label used for language selection`,
           ` | ${locale} | ${name} | ${region}`,
           (isDefault ? ' | [ default language ]' : ''),
         ].join(''),

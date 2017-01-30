@@ -13,11 +13,14 @@
   plugins:
     - react
     - inflection
+    - getsentry
   settings:
     import/resolver:
       babel-module:
       webpack:
   rules:
+    getsentry/jsx-needs-i18n:
+      - 1
     no-magic-numbers:
       - error
       -
