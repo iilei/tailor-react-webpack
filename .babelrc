@@ -1,5 +1,5 @@
 {
-  "presets": ["airbnb", "react", "stage-0", ["env", {
+  "presets": ["airbnb", "react", "stage-2", ["env", {
       "targets": {
         "browsers": ["last 2 versions", "safari >= 7"]
       },
@@ -8,12 +8,14 @@
       "useBuiltIns": true
     }]],
   "plugins": [
+    "react-hot-loader/babel",
+    ["transform-require-ignore", {
+      "extensions": [".css"]
+    }],
     "transform-class-properties",
     "syntax-trailing-function-commas",
     "transform-decorators-legacy",
-    ["module-resolver", {
-      "root": ["./src", "./"]
-    }]
+    ["module-resolver", { "root": ["./src", "./"] }]
   ],
   "env": {
     "development": {

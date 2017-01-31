@@ -2,6 +2,7 @@
 
 ### Generated content
 build/
+static
 !build/i18n/*/Readme.md
 src/intl-message/intl-language-select/generated.js
 node_modules/

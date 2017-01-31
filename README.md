@@ -9,13 +9,13 @@ make sure you have [jq](https://stedolan.github.io/jq) and [yarn](https://yarnpk
 Run the following to generate generic locale data user for pluralization etc:
 
 ```
-npm run intl:build-locale-data
+yarn run intl:build-locale-data
 ```
 
 Fetch remote translation objects by
 
 ```
-npm run intl:pull
+yarn run intl:pull
 ```
 
 New translation keys are created entirely within the repository itself. (Single source of truth)
@@ -96,17 +96,17 @@ locales:
 
 There is a command to inspect the generated config:
 ```
-npm run conf:dump 
+yarn run conf:dump 
 ```
 
 Or, just the localeMap:
 
 
 ```
-npm run conf:dump localeMap
+yarn run conf:dump localeMap
 
 # Beautified:
-npm run -s conf:dump localeMap | jq .
+yarn run -s conf:dump localeMap | jq .
 
 ```
 
