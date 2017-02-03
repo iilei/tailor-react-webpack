@@ -23,7 +23,7 @@
     "postintl:build-language-select": "npm run prettier:w -s -- src/intl-message/intl-language-select/generated.js",
     "intl:build-locale-data": "npm run babel-env scripts/intl/build-locale-data",
     "intl:fetch-meta": "npm run intl:mkdirs && phraseapp locales list > build/i18n/metadata.json",
-    "intl:mkdirs": "mkdir -p build/i18n/{remote,local,locale-data}",
+    "intl:mkdirs": "bash -c 'mkdir -p build/i18n/{remote,local,locale-data}'",
     "intl:pull": "npm run phraseapp:pull && npm run intl:add-cache-bust",
     "intl:purge": "rm -rf build/i18n",
     "intl:push": "npm run intl:aggregate && echo \"\nIntl-Keys to be synced: $(cat build/i18n/__authoring__.json | jq length)\n\" && [[ $(cat build/i18n/__authoring__.json | jq length) -gt 1 ]] && phraseapp push || exit 0",
