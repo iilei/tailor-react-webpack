@@ -18,7 +18,7 @@ const env = process.env.NODE_ENV;
 const IS_PROD = ['prod', 'production'].includes(env.toLowerCase());
 const IS_DEV = !IS_PROD;
 const RGXP_VENDOR_PCKG = /node_modules/;
-const RGXP_VENDOR_LOCALES = /(?:moment[\\/]locale)|(?:intl[\\/]locale-data[\\/]jsonp)$/;
+const RGXP_VENDOR_LOCALES = /(?:moment[\\/]locale)|(?:intl[\\/]locale-data)$/;
 
 const MIN_CHUNK_SIZE = 100000;
 const APP_MAIN_CHUNK_NAME = parameterize(appConfig.appName);
@@ -156,8 +156,17 @@ const config = {
 
     new webpack.optimize.CommonsChunkPlugin({
       // Extract all 3rd party modules into a separate 'vendor' chunk
+      // exclude locales
       name: 'vendor',
-      minChunks: ({ resource }) => RGXP_VENDOR_PCKG.test(resource),
+      minChunks: ({ resource }) => (
+        RGXP_VENDOR_PCKG.test(resource) && !RGXP_VENDOR_LOCALES.test(resource)
+      ),
+    }),
+
+    new webpack.optimize.CommonsChunkPlugin({
+      // Extract all locale modules into a separate 'locales' chunk
+      name: 'locales',
+      minChunks: ({ resource }) => RGXP_VENDOR_LOCALES.test(resource),
     }),
 
     // new webpack.optimize.CommonsChunkPlugin('manifest'),
@@ -174,6 +183,7 @@ const config = {
     new ScriptExtHtmlWebpackPlugin({
       // inline: 'manifest.js',
       defaultAttribute: 'defer',
+      inline: ['locales'],
     }),
 
     // Need this plugin for deterministic hashing

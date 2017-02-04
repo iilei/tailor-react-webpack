@@ -1,7 +1,17 @@
 import React from 'react';
 import { render } from 'react-dom';
+import { addLocaleData } from 'react-intl';
 
 import App from './app';
+
+const { locales } = appConfig;
+const localeMainTags = locales.map(locale => locale.split('-')[0]);
+
+// dynamic requires - restricted to locales actually desired via webpack.config
+localeMainTags.forEach((tag) => {
+  addLocaleData(...require(`react-intl/locale-data/${tag}`));
+});
+
 
 const APP_NAME = appConfig.__appName;
 const IS_DEV = process.env.IS_DEV;
