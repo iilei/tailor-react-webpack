@@ -53,6 +53,7 @@
   "author": "iilei",
   "license": "MIT",
   "devDependencies": {
+    "assets-webpack-plugin": "^3.5.1",
     "babel-cli": "^6.22.2",
     "babel-core": "^6.22.1",
     "babel-eslint": "^7.1.1",
@@ -106,6 +107,7 @@
     "react-hot-loader": "^3.0.0-beta.6",
     "react-test-renderer": "^15.4.2",
     "sass-loader": "^v4.1.1",
+    "script-ext-html-webpack-plugin": "^1.5.0",
     "serialize-javascript": "1.3.0",
     "style-loader": "^0.13.1",
     "svg-url-loader": "^1.1.1",
@@ -115,6 +117,7 @@
     "webpack-dev-middleware": "1.9.0",
     "webpack-dev-server": "^2.2.1",
     "webpack-hot-middleware": "2.16.1",
+    "webpack-md5-hash": "^0.0.5",
     "webpack-node-externals": "1.5.4",
     "yamljs": "0.2.8"
   },

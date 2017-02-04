@@ -5,14 +5,18 @@ import appConfig from './config/appConfig';
 const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const ChunkManifestPlugin = require('chunk-manifest-webpack-plugin');
+const WebpackMd5Hash = require('webpack-md5-hash');
+const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
+// const AssetsPlugin = require('assets-webpack-plugin');
+// const ChunkManifestPlugin = require('chunk-manifest-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const postCss = require('postcss-cssnext');
 
 const env = process.env.NODE_ENV || 'prod';
 const IS_PROD = ['prod', 'production'].includes(env.toLowerCase());
 const IS_DEV = !IS_PROD;
-
+const RGXP_VENDOR_PCKG = /node_modules/;
+const RGXP_VENDOR_LOCALES = /moment[\\/]locale$/;
 const MIN_CHUNK_SIZE = 100000;
 const chunks = {
   main: appConfig.appName,
@@ -76,7 +80,7 @@ const config = {
   },
   output: {
     path: path.join(__dirname, './static'),
-    filename: (IS_PROD ? '[name].[id].[chunkhash:6].js' : '[name].[id].js'),
+    filename: (IS_PROD ? '[name]-[chunkhash:6].js' : '[name].[id].js'),
     publicPath: '',
     libraryTarget: 'this',
     library: '__init__',
@@ -130,13 +134,20 @@ const config = {
 
     new webpack.optimize.MinChunkSizePlugin({ minChunkSize: MIN_CHUNK_SIZE }),
     new webpack.optimize.AggressiveMergingPlugin(),
-    new webpack.ContextReplacementPlugin(/moment[\\/]locale$/, REGEX_DESIRED_LANGUAGES),
-    new ChunkManifestPlugin({ filename: 'manifest.json', manifestVariable: 'webpackManifest' }),
+    new webpack.ContextReplacementPlugin(RGXP_VENDOR_LOCALES, REGEX_DESIRED_LANGUAGES),
+    // new ChunkManifestPlugin({ filename: 'manifest.json', manifestVariable: 'webpackManifest' }),
     new webpack.optimize.CommonsChunkPlugin({
       name: chunks.main,
-      filename: IS_PROD ? '[name].[id].[chunkhash:6].js' : '[name].js',
+      filename: IS_PROD ? '[name]-[chunkhash:6].js' : '[name].js',
     }),
-    new ExtractTextPlugin((IS_PROD ? '[name].[id].[hash:6].css' : '[name].css')),
+    new webpack.optimize.CommonsChunkPlugin({
+      // Extract all 3rd party modules into a separate 'vendor' chunk
+      name: 'vendor',
+      minChunks: ({ resource }) => RGXP_VENDOR_PCKG.test(resource),
+    }),
+    // new webpack.optimize.CommonsChunkPlugin('manifest'),
+    new WebpackMd5Hash(),
+    new ExtractTextPlugin((IS_PROD ? '[name]-[hash:6].css' : '[name].css')),
     new webpack.NoEmitOnErrorsPlugin(),
     new webpack.DefinePlugin({ 'process.env.NODE_ENV': JSON.stringify(env) }),
     new webpack.DefinePlugin({
@@ -144,6 +155,18 @@ const config = {
       // localeMap: JSON.stringify(localeMap),
       'process.env': JSON.stringify({ IS_DEV, IS_PROD }),
     }),
+
+    new ScriptExtHtmlWebpackPlugin({
+      // inline: 'manifest.js',
+      defaultAttribute: 'defer',
+    }),
+
+    // Need this plugin for deterministic hashing
+    // until this issue is resolved: https://github.com/webpack/webpack/issues/1315
+    // for more info: https://webpack.js.org/how-to/cache/
+    new WebpackMd5Hash(),
+
+
   ].filter(plugin => !!plugin), // drop *null* entries
   devtool: IS_PROD ? 'source-maps' : 'eval-source-map',
 };
