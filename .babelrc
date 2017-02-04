@@ -1,5 +1,5 @@
 {
-  "presets": ["airbnb", "react", "stage-2", ["env", {
+  "presets": ["airbnb", "react", "stage-0", ["env", {
       "targets": {
         "browsers": ["last 2 versions", "safari >= 7"]
       },

@@ -1,7 +1,7 @@
 ---
 # Language codes must adhere to RFC-5646 Standard
 
-app_name: my_app # namespace for localstorage - should prefix locale_translation_key_prefix
+app_name: my-app # namespace for localstorage - should prefix locale_translation_key_prefix
 default_locale: de-DE
 locales: # Locales: order as desired in menu.
   - de-DE

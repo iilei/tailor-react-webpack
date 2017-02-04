@@ -9,7 +9,11 @@
     modules: true
   parser: "babel-eslint"
   globals:
-    - process
+    process: false
+    appConfig: false
+    React: false
+  no-undef:
+    - error
   env:
     browser: true
   plugins:
@@ -21,6 +25,8 @@
       babel-module:
       webpack:
   rules:
+    react/react-in-jsx-scope: # is exposed
+      - 0
     getsentry/jsx-needs-i18n:
       - 1
     no-magic-numbers:
@@ -48,6 +54,7 @@
       - error
       - allow:
         - __injectIntl
+        - __appName
     import/no-extraneous-dependencies:
       - error
       - devDependencies:
@@ -59,4 +66,5 @@
         - "./webpack.config*"
     inflection/no-plural-filenames:
       - error
-
+    react/prefer-stateless-function:
+      - 1

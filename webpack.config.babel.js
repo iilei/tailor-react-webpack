@@ -1,5 +1,6 @@
 // based on https://github.com/frux/trowel/tree/master/webpack
 
+import parameterize from 'parameterize';
 import appConfig from './config/appConfig';
 
 const path = require('path');
@@ -7,20 +8,20 @@ const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const WebpackMd5Hash = require('webpack-md5-hash');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
+const HtmlWebpackExcludeAssetsPlugin = require('html-webpack-exclude-assets-plugin');
 // const AssetsPlugin = require('assets-webpack-plugin');
 // const ChunkManifestPlugin = require('chunk-manifest-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const postCss = require('postcss-cssnext');
 
-const env = process.env.NODE_ENV || 'prod';
+const env = process.env.NODE_ENV;
 const IS_PROD = ['prod', 'production'].includes(env.toLowerCase());
 const IS_DEV = !IS_PROD;
 const RGXP_VENDOR_PCKG = /node_modules/;
-const RGXP_VENDOR_LOCALES = /moment[\\/]locale$/;
+const RGXP_VENDOR_LOCALES = /(?:moment[\\/]locale)|(?:intl[\\/]locale-data[\\/]jsonp)$/;
+
 const MIN_CHUNK_SIZE = 100000;
-const chunks = {
-  main: appConfig.appName,
-};
+const APP_MAIN_CHUNK_NAME = parameterize(appConfig.appName);
 
 /**
  * Determine which locales moment.js should actually load
@@ -56,9 +57,10 @@ const mainEntrypoint = [
   // bundle the client for hot reloading
   // only- means to only hot reload for successful updates
 
-  './src/app',
+  './src/index',
   // finally, the main entry point,
 ].filter(file => !!file); // get rid of `null` entries, keep truthies
+
 let stylesLoader = [
   'style-loader',
   'css-loader',
@@ -76,7 +78,7 @@ if (IS_PROD) {
 const config = {
   name: 'client',
   entry: {
-    [chunks.main]: mainEntrypoint,
+    [APP_MAIN_CHUNK_NAME]: mainEntrypoint,
   },
   output: {
     path: path.join(__dirname, './static'),
@@ -104,6 +106,7 @@ const config = {
   module: {
     rules: [
       { test: /\.jsx?$/, loader: 'babel-loader' },
+      { test: require.resolve('react'), loader: 'expose-loader?React' },
       { test: /\.s?css$/, loader: stylesLoader },
       { test: /\.(jpg|gif|png|eot|otf|woff2?|ttf)$/, loader: 'file-loader' },
       {
@@ -125,7 +128,14 @@ const config = {
     ],
   },
   plugins: [
-    new HtmlWebpackPlugin({ template: 'src/index.html', inject: 'body', filename: 'index.html' }),
+    new HtmlWebpackPlugin({
+      template: 'src/index.html',
+      inject: 'body',
+      filename: 'index.html',
+      excludeAssets: ['intl'],
+    }),
+    new HtmlWebpackExcludeAssetsPlugin(),
+
     IS_DEV ? new webpack.HotModuleReplacementPlugin() : null,
     // enable HMR globally
 
@@ -133,18 +143,23 @@ const config = {
     // prints more readable module names in the browser console on HMR updates
 
     new webpack.optimize.MinChunkSizePlugin({ minChunkSize: MIN_CHUNK_SIZE }),
-    new webpack.optimize.AggressiveMergingPlugin(),
+    IS_PROD ? new webpack.optimize.AggressiveMergingPlugin() : null,
+
     new webpack.ContextReplacementPlugin(RGXP_VENDOR_LOCALES, REGEX_DESIRED_LANGUAGES),
+
     // new ChunkManifestPlugin({ filename: 'manifest.json', manifestVariable: 'webpackManifest' }),
+
     new webpack.optimize.CommonsChunkPlugin({
-      name: chunks.main,
+      name: APP_MAIN_CHUNK_NAME,
       filename: IS_PROD ? '[name]-[chunkhash:6].js' : '[name].js',
     }),
+
     new webpack.optimize.CommonsChunkPlugin({
       // Extract all 3rd party modules into a separate 'vendor' chunk
       name: 'vendor',
       minChunks: ({ resource }) => RGXP_VENDOR_PCKG.test(resource),
     }),
+
     // new webpack.optimize.CommonsChunkPlugin('manifest'),
     new WebpackMd5Hash(),
     new ExtractTextPlugin((IS_PROD ? '[name]-[hash:6].css' : '[name].css')),
@@ -168,7 +183,8 @@ const config = {
 
 
   ].filter(plugin => !!plugin), // drop *null* entries
-  devtool: IS_PROD ? 'source-maps' : 'eval-source-map',
+  devtool: IS_PROD ? 'source-maps' : 'cheap-module-eval-source-map',
+
 };
 
 module.exports = config;
