@@ -6,33 +6,28 @@ const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const WebpackMd5Hash = require('webpack-md5-hash');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
-const HtmlWebpackExcludeAssetsPlugin = require('html-webpack-exclude-assets-plugin');
+// const HtmlWebpackExcludeAssetsPlugin = require('html-webpack-exclude-assets-plugin');
 // const AssetsPlugin = require('assets-webpack-plugin');
-// const ChunkManifestPlugin = require('chunk-manifest-webpack-plugin');
+const ChunkManifestPlugin = require('chunk-manifest-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const chalk = require('chalk');
 const postCss = require('postcss-cssnext');
 const argv = require('yargs')(process.argv);
 
-const localesOverride = (argv
-  .env('env')
-  .array('locale')
-  .argv.env || {locale: null}).locale;
+const localesOverride = (argv.env('env').array('locale').argv.env || { locale: null }).locale;
 
 const IS_PROD = ['prod', 'production'].includes(process.env.NODE_ENV.toLowerCase());
 const IS_DEV = !IS_PROD;
-const RGXP_VENDOR_PCKG = /node_modules/;
 const RGXP_VENDOR_LOCALES = /(?:moment[\\/]locale)|(?:intl[\\/]locale-data(?:[\\/]jsonp)?)$/;
-
-const MIN_CHUNK_SIZE = 100000;
 const APP_MAIN_CHUNK_NAME = parameterize(appConfig.appName);
-
-const locales = (() => (Array.isArray(localesOverride) ? localesOverride : appConfig.locales))();
+const locales = (Array.isArray(localesOverride) ? localesOverride : appConfig.locales);
 
 if (Array.isArray(localesOverride)) {
   // eslint-disable-next-line
   console.warn(
-    chalk.bold.bgRed.white(' ⚠  -- CAUTION `--env.locale` Flags are solely meant for testing purposes '),
+    chalk.bold.bgRed.white(
+      ' ⚠  -- CAUTION `--env.locale` Flags are solely meant for testing purposes ',
+    ),
   );
   // eslint-disable-next-line
   console.info(
@@ -75,7 +70,7 @@ const mainEntrypoint = [
   // only- means to only hot reload for successful updates
 
   './src/index',
-  // finally, the main entry point,
+  // finally, the main entry point,,
 ].filter(file => !!file); // get rid of `null` entries, keep truthies
 
 let stylesLoader = [
@@ -95,11 +90,23 @@ if (IS_PROD) {
 const config = {
   name: 'client',
   entry: {
+    'libs-react': [
+      'react',
+      'react-dom',
+      'react-router',
+    ],
+    'libs-moment': [
+      'moment',
+      'moment-timezone',
+    ],
+    'libs-util': [
+      'humps',
+    ],
     [APP_MAIN_CHUNK_NAME]: mainEntrypoint,
   },
   output: {
     path: path.join(__dirname, './static'),
-    filename: (IS_PROD ? '[name]-[chunkhash:6].js' : '[name].[id].js'),
+    filename: IS_PROD ? '[name]-[chunkhash:6].js' : '[name].[id].js',
     publicPath: '',
     libraryTarget: 'this',
     library: '__init__',
@@ -114,10 +121,9 @@ const config = {
 
     publicPath: '/',
     // match the output `publicPath`
-
     // compress: true,
     // enable gzip
-    // clientLogLevel: 'info' // none, error, warning or info,
+    // clientLogLevel: 'info' // none, error, warning or info,,
   },
   resolve: { extensions: ['.js', '.jsx'] },
   module: {
@@ -149,44 +155,22 @@ const config = {
       template: 'src/index.html',
       inject: 'body',
       filename: 'index.html',
-      excludeAssets: [],
     }),
-    new HtmlWebpackExcludeAssetsPlugin(),
 
     IS_DEV ? new webpack.HotModuleReplacementPlugin() : null,
     // enable HMR globally
 
-    IS_DEV ? new webpack.NamedModulesPlugin() : null,
-    // prints more readable module names in the browser console on HMR updates
-
-    new webpack.optimize.MinChunkSizePlugin({ minChunkSize: MIN_CHUNK_SIZE }),
     IS_PROD ? new webpack.optimize.AggressiveMergingPlugin() : null,
 
     new webpack.ContextReplacementPlugin(RGXP_VENDOR_LOCALES, REGEX_DESIRED_LANGUAGES),
-
-    // new ChunkManifestPlugin({ filename: 'manifest.json', manifestVariable: 'webpackManifest' }),
-
-    new webpack.optimize.CommonsChunkPlugin({
-      name: APP_MAIN_CHUNK_NAME,
-      filename: IS_PROD ? '[name]-[chunkhash:6].js' : '[name].js',
-    }),
+    new ChunkManifestPlugin({ filename: 'manifest.json', manifestVariable: 'webpackManifest' }),
 
     new webpack.optimize.CommonsChunkPlugin({
-      // Extract all 3rd party modules into a separate 'vendor' chunk
-      // exclude locales
-      name: 'vendor',
-      minChunks: ({ resource }) => (
-        RGXP_VENDOR_PCKG.test(resource) && !RGXP_VENDOR_LOCALES.test(resource)
-      ),
+      names: ['libs-react', 'libs-moment', 'libs-util'],
+      minChunks: Infinity,
     }),
 
-    new webpack.optimize.CommonsChunkPlugin({
-      // Extract all locale modules into a separate 'locales' chunk
-      name: 'locales',
-      minChunks: ({ resource }) => RGXP_VENDOR_LOCALES.test(resource),
-    }),
-
-    // new webpack.optimize.CommonsChunkPlugin('manifest'),
+    new webpack.optimize.CommonsChunkPlugin('manifest'),
     new WebpackMd5Hash(),
     new ExtractTextPlugin((IS_PROD ? '[name]-[hash:6].css' : '[name].css')),
     new webpack.NoEmitOnErrorsPlugin(),
@@ -196,22 +180,15 @@ const config = {
       // localeMap: JSON.stringify(localeMap),
       'process.env': JSON.stringify({ IS_DEV, IS_PROD }),
     }),
-
     new ScriptExtHtmlWebpackPlugin({
-      // inline: 'manifest.js',
       defaultAttribute: 'defer',
-      inline: ['locales'],
     }),
-
     // Need this plugin for deterministic hashing
     // until this issue is resolved: https://github.com/webpack/webpack/issues/1315
     // for more info: https://webpack.js.org/how-to/cache/
     new WebpackMd5Hash(),
-
-
   ].filter(plugin => !!plugin), // drop *null* entries
   devtool: IS_PROD ? 'source-maps' : 'cheap-module-eval-source-map',
-
 };
 
 module.exports = config;

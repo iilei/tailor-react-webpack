@@ -7,7 +7,7 @@ import App from './app';
 const { locales } = appConfig;
 const APP_NAME = appConfig.__appName;
 const IS_DEV = process.env.IS_DEV;
-const Intl = window ? window.intl : global.intl;
+const Intl = window ? window.Intl : global.Intl;
 
 const localeMainTags = locales.map(locale => locale.split('-')[0]);
 
@@ -15,7 +15,7 @@ localeMainTags.forEach((tag) => {
   try {
     // -- Dynamic Import - tamed via webpack.config, so only desired languages are loaded
     // eslint-disable-next-line import/no-dynamic-require, global-require
-    addLocaleData(...require(`react-intl/locale-data/${tag}`));
+    addLocaleData(require(`react-intl/locale-data/${tag}`));
   } catch (e) {
     // logging
     if (IS_DEV) {
