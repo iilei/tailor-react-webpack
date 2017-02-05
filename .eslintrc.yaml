@@ -68,3 +68,7 @@
       - error
     react/prefer-stateless-function:
       - 1
+    arrow-parens:
+    - 2
+    - as-needed
+    - requireForBlockBody: true

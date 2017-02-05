@@ -1,5 +1,3 @@
-// based on https://github.com/frux/trowel/tree/master/webpack
-
 import parameterize from 'parameterize';
 import appConfig from './config/appConfig';
 
@@ -12,21 +10,40 @@ const HtmlWebpackExcludeAssetsPlugin = require('html-webpack-exclude-assets-plug
 // const AssetsPlugin = require('assets-webpack-plugin');
 // const ChunkManifestPlugin = require('chunk-manifest-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const chalk = require('chalk');
 const postCss = require('postcss-cssnext');
+const argv = require('yargs')(process.argv);
 
-const env = process.env.NODE_ENV;
-const IS_PROD = ['prod', 'production'].includes(env.toLowerCase());
+const localesOverride = (argv
+  .env('env')
+  .array('locale')
+  .argv.env || {locale: null}).locale;
+
+const IS_PROD = ['prod', 'production'].includes(process.env.NODE_ENV.toLowerCase());
 const IS_DEV = !IS_PROD;
 const RGXP_VENDOR_PCKG = /node_modules/;
-const RGXP_VENDOR_LOCALES = /(?:moment[\\/]locale)|(?:intl[\\/]locale-data)$/;
+const RGXP_VENDOR_LOCALES = /(?:moment[\\/]locale)|(?:intl[\\/]locale-data(?:[\\/]jsonp)?)$/;
 
 const MIN_CHUNK_SIZE = 100000;
 const APP_MAIN_CHUNK_NAME = parameterize(appConfig.appName);
 
+const locales = (() => (Array.isArray(localesOverride) ? localesOverride : appConfig.locales))();
+
+if (Array.isArray(localesOverride)) {
+  // eslint-disable-next-line
+  console.warn(
+    chalk.bold.bgRed.white(' ⚠  -- CAUTION `--env.locale` Flags are solely meant for testing purposes '),
+  );
+  // eslint-disable-next-line
+  console.info(
+    chalk.blue(`Building as if appConfig would set locales to "${locales.join('", "')}"`),
+  );
+}
+
 /**
  * Determine which locales moment.js should actually load
  */
-let localePatterns = appConfig.locales.map(
+let localePatterns = locales.map(
   // Regex matching 'en' or 'en-US' and 'de' or 'de-DE' -- part after the '-' is optional
   locale => locale.toLowerCase().replace(/-([a-z]+)$/, '(?:-$1)?'),
 );
@@ -132,7 +149,7 @@ const config = {
       template: 'src/index.html',
       inject: 'body',
       filename: 'index.html',
-      excludeAssets: ['intl'],
+      excludeAssets: [],
     }),
     new HtmlWebpackExcludeAssetsPlugin(),
 
@@ -173,7 +190,7 @@ const config = {
     new WebpackMd5Hash(),
     new ExtractTextPlugin((IS_PROD ? '[name]-[hash:6].css' : '[name].css')),
     new webpack.NoEmitOnErrorsPlugin(),
-    new webpack.DefinePlugin({ 'process.env.NODE_ENV': JSON.stringify(env) }),
+    new webpack.DefinePlugin({ 'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV) }),
     new webpack.DefinePlugin({
       appConfig: JSON.stringify(appConfig),
       // localeMap: JSON.stringify(localeMap),
