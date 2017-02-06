@@ -110,10 +110,6 @@ yarn run -s conf:dump localeMap | jq .
 
 ```
 
-
-
-
-
 \# TODO:
 
 Try [parrot](https://anthonynsimon.gitbooks.io/parrot)
@@ -125,3 +121,13 @@ as an alternative to phraseapp.
         appConfig.yml
 
 Application-wide config is meant to reside in `appConfig.yml`.
+
+### Good to know
+
+Given moment.js is incorporated in the project, when reconfiguring webpack, you might want to run the following to be sure the bundle contains only
+the desired locales and no unwanted dependencies:
+
+```bash
+./scripts/check_locale_bundling.sh
+```
+
